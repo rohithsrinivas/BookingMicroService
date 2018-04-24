@@ -274,8 +274,6 @@ public class BookingServiceImpl implements BookingService {
 	}
 
 	private String fetchBaseUrlForZuul() {
-//		Application application = this.eurekaClient.getApplication(this.zoolGatewayBaseurl);
-//		InstanceInfo info = application.getInstances().get(0);
 		return this.zoolGatewayBaseurl;
 	}
 
