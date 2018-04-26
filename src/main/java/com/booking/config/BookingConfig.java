@@ -8,6 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.guava.GuavaCacheManager;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -30,7 +31,7 @@ import com.booking.service.BookingServiceImpl;
 @EnableAsync
 @EnableScheduling
 @EnableCaching
-@EnableHystrix
+@EnableCircuitBreaker
 public class BookingConfig {
 
 	public BookingService bookingService() {
