@@ -40,6 +40,7 @@ import com.booking.repo.BookingRepo;
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;
 import com.netflix.discovery.shared.Application;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 //import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.rest.util.GenericUtils;
 import com.rest.util.ServerLoggerUtil;
@@ -76,8 +77,8 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-	//@HystrixCommand(ignoreExceptions = {
-			//BookingServiceBusinessException.class }, fallbackMethod = "getFallBackBookingDetails")
+	@HystrixCommand(ignoreExceptions = {
+			BookingServiceBusinessException.class }, fallbackMethod = "getFallBackBookingDetails")
 	@CachePut(cacheNames = BookingServiceConstants.CACHE_NAME_FOR_RESTAURANT_AND_BOOKINGS, key = "#result.bookingId")
 	public Booking placeBooking(Booking booking) {
 		Booking bookingResult = null;
@@ -93,8 +94,8 @@ public class BookingServiceImpl implements BookingService {
 	}
 
 	@Override
-	//@HystrixCommand(ignoreExceptions = {
-			//BookingServiceBusinessException.class }, fallbackMethod = "fallBackForGetBookings")
+	@HystrixCommand(ignoreExceptions = {
+			BookingServiceBusinessException.class }, fallbackMethod = "fallBackForGetBookings")
 	public List<Booking> getBookingsForUser(String bookedByUserId) {
 		List<Booking> bookingsForUser = null;
 		try {
@@ -108,8 +109,8 @@ public class BookingServiceImpl implements BookingService {
 	}
 
 	@Override
-	//@HystrixCommand(ignoreExceptions = { NoRestaurantFoundBusinessException.class,
-			//BookingServiceBusinessException.class }, fallbackMethod = "getFallBackRestaurantDetails")
+	@HystrixCommand(ignoreExceptions = { NoRestaurantFoundBusinessException.class,
+			BookingServiceBusinessException.class }, fallbackMethod = "getFallBackRestaurantDetails")
 	public Restaurant updateRestaurantEntity(BookingInputDto bookingInputDto) {
 		Restaurant restaurant = null;
 		if (this.isRestaurantServerUp()) {
@@ -149,8 +150,8 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	@Cacheable(cacheNames = BookingServiceConstants.CACHE_NAME_FOR_RESTAURANT_AND_BOOKINGS)
-	//@HystrixCommand(ignoreExceptions = { BookingServiceBusinessException.class,
-			//NoBookingFoundBusinessException.class }, fallbackMethod = "fallBackForGetBookings")
+	@HystrixCommand(ignoreExceptions = { BookingServiceBusinessException.class,
+			NoBookingFoundBusinessException.class }, fallbackMethod = "fallBackForGetBookings")
 	public List<Booking> getBookingsForRestaurant(Integer restaurantId) {
 		List<Booking> bookingsForRestaurant = null;
 		try {
@@ -168,8 +169,8 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	@Cacheable(cacheNames = BookingServiceConstants.CACHE_NAME_FOR_RESTAURANT_AND_BOOKINGS)
-	//@HystrixCommand(ignoreExceptions = {
-			//BookingServiceBusinessException.class }, fallbackMethod = "fallBackForGetRestaurantsByNameOrAddress")
+	@HystrixCommand(ignoreExceptions = {
+			BookingServiceBusinessException.class }, fallbackMethod = "fallBackForGetRestaurantsByNameOrAddress")
 	public List<Restaurant> getRestaurantsByName(String restaurantName, Integer numberOfTablesRequired) {
 		RestTemplate template = new RestTemplate();
 		if (this.isRestaurantServerUp()) {
@@ -190,8 +191,8 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	@Cacheable(cacheNames = BookingServiceConstants.CACHE_NAME_FOR_RESTAURANT_AND_BOOKINGS)
-	//@HystrixCommand(ignoreExceptions = {
-			//BookingServiceBusinessException.class }, fallbackMethod = "fallBackForGetRestaurantsByName")
+	@HystrixCommand(ignoreExceptions = {
+			BookingServiceBusinessException.class }, fallbackMethod = "fallBackForGetRestaurantsByName")
 	public List<Restaurant> getRestaurantsByAddress(String address, Integer numberOfTablesRequired) {
 		RestTemplate template = new RestTemplate();
 		if (this.isRestaurantServerUp()) {
