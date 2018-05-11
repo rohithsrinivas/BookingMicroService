@@ -278,13 +278,13 @@ public class BookingServiceImpl implements BookingService {
 		return this.zoolGatewayBaseurl;
 	}
 
-	private List<Restaurant> fallBackForGetRestaurantsByNameOrAddress() {
+	public List<Restaurant> fallBackForGetRestaurantsByNameOrAddress() {
 		List<Restaurant> fallBackList = new ArrayList<>();
 		fallBackList.add(this.getFallBackRestaurantDetails());
 		return fallBackList;
 	}
 
-	private Restaurant getFallBackRestaurantDetails() {
+	public Restaurant getFallBackRestaurantDetails() {
 		Restaurant fallBackRestaurant = new Restaurant();
 		fallBackRestaurant.setMenu(new Menu());
 		fallBackRestaurant.setRestaurantAddress("default fallback address");
@@ -295,7 +295,7 @@ public class BookingServiceImpl implements BookingService {
 		return fallBackRestaurant;
 	}
 
-	private List<Booking> fallBackForGetBookings() {
+	public List<Booking> fallBackForGetBookings() {
 		List<Booking> fallBackBookingList = new ArrayList<>();
 		fallBackBookingList.add(this.getFallBackBookingDetails());
 		return fallBackBookingList;
