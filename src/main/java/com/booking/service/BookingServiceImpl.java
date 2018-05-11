@@ -295,7 +295,7 @@ public class BookingServiceImpl implements BookingService {
 		return fallBackRestaurant;
 	}
 
-	public List<Booking> fallBackForGetBookings() {
+	public List<Booking> fallBackForGetBookings(Integer random) {
 		List<Booking> fallBackBookingList = new ArrayList<>();
 		fallBackBookingList.add(this.getFallBackBookingDetails());
 		return fallBackBookingList;
