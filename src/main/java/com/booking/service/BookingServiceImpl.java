@@ -95,7 +95,7 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	@HystrixCommand(ignoreExceptions = {
-			BookingServiceBusinessException.class }, fallbackMethod = "fallBackForGetBookings")
+			BookingServiceBusinessException.class }, fallbackMethod = "fallBackForGetBookingsForUser")
 	public List<Booking> getBookingsForUser(String bookedByUserId) {
 		List<Booking> bookingsForUser = null;
 		try {
@@ -110,7 +110,7 @@ public class BookingServiceImpl implements BookingService {
 
 	@Override
 	@HystrixCommand(ignoreExceptions = { NoRestaurantFoundBusinessException.class,
-			BookingServiceBusinessException.class }, fallbackMethod = "getFallBackRestaurantDetails")
+			BookingServiceBusinessException.class }, fallbackMethod = "getFallBackRestaurantDetailsForUpdate")
 	public Restaurant updateRestaurantEntity(BookingInputDto bookingInputDto) {
 		Restaurant restaurant = null;
 		if (this.isRestaurantServerUp()) {
@@ -192,7 +192,7 @@ public class BookingServiceImpl implements BookingService {
 	@Override
 	@Cacheable(cacheNames = BookingServiceConstants.CACHE_NAME_FOR_RESTAURANT_AND_BOOKINGS)
 	@HystrixCommand(ignoreExceptions = {
-			BookingServiceBusinessException.class }, fallbackMethod = "fallBackForGetRestaurantsByName")
+			BookingServiceBusinessException.class }, fallbackMethod = "fallBackForGetRestaurantsByNameOrAddress")
 	public List<Restaurant> getRestaurantsByAddress(String address, Integer numberOfTablesRequired) {
 		RestTemplate template = new RestTemplate();
 		if (this.isRestaurantServerUp()) {
@@ -278,13 +278,13 @@ public class BookingServiceImpl implements BookingService {
 		return this.zoolGatewayBaseurl;
 	}
 
-	public List<Restaurant> fallBackForGetRestaurantsByNameOrAddress() {
+	public List<Restaurant> fallBackForGetRestaurantsByNameOrAddress(String address, Integer numberOfTablesRequired) {
 		List<Restaurant> fallBackList = new ArrayList<>();
 		fallBackList.add(this.getFallBackRestaurantDetails());
 		return fallBackList;
 	}
 
-	public Restaurant getFallBackRestaurantDetails() {
+	private Restaurant getFallBackRestaurantDetails() {
 		Restaurant fallBackRestaurant = new Restaurant();
 		fallBackRestaurant.setMenu(new Menu());
 		fallBackRestaurant.setRestaurantAddress("default fallback address");
@@ -297,11 +297,19 @@ public class BookingServiceImpl implements BookingService {
 
 	public List<Booking> fallBackForGetBookings(Integer random) {
 		List<Booking> fallBackBookingList = new ArrayList<>();
-		fallBackBookingList.add(this.getFallBackBookingDetails());
+		fallBackBookingList.add(this.getFallBackBookingDetails(null));
 		return fallBackBookingList;
 	}
+	
+	public List<Booking> fallBackForGetBookingsForUser(String random){
+		return this.fallBackForGetBookings(10);
+	}
+	
+	public Restaurant getFallBackRestaurantDetailsForUpdate(BookingInputDto bookingInputDto) {
+		return this.getFallBackRestaurantDetails();
+	}
 
-	private Booking getFallBackBookingDetails() {
+	private Booking getFallBackBookingDetails(Booking booking) {
 		Booking fallBackBooking = new Booking();
 		fallBackBooking.setBillingAmount(0d);
 		fallBackBooking.setBookedByUserId("fall back user id");
