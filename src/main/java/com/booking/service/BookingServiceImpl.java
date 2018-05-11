@@ -271,7 +271,8 @@ public class BookingServiceImpl implements BookingService {
 	}
 
 	private String fetchBaseUrlForRestaurantService() {
-		return fetchBaseUrlForZuul() + this.restaurantServiceContextPath;
+		//return fetchBaseUrlForZuul() + this.restaurantServiceContextPath;
+		return "https://restaurantmicroservice.herokuapp.com/api/restaurant";
 	}
 
 	private String fetchBaseUrlForZuul() {
