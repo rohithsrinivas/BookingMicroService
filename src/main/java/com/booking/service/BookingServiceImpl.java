@@ -312,7 +312,7 @@ public class BookingServiceImpl implements BookingService {
 		return this.getFallBackRestaurantDetails();
 	}
 
-	private Booking getFallBackBookingDetails(Booking booking) {
+	public Booking getFallBackBookingDetails(Booking booking) {
 		Booking fallBackBooking = new Booking();
 		fallBackBooking.setBillingAmount(0d);
 		fallBackBooking.setBookedByUserId("fall back user id");
