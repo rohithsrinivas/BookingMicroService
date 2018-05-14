@@ -83,7 +83,9 @@ public class BookingServiceImpl implements BookingService {
 	public Booking placeBooking(Booking booking) {
 		Booking bookingResult = null;
 		try {
+			ServerLoggerUtil.info(this.getClass(), "before saving the booking");
 			bookingResult = this.bookingRepo.save(booking);
+			ServerLoggerUtil.info(this.getClass(), "inside place booking of BookingServiceImpl"+bookingResult);
 			this.clearCache();
 		} catch (HibernateException | PersistenceException e) {
 			ServerLoggerUtil.error(this.getClass(), BookingServiceConstants.BOOKING_NOT_SAVED_ERROR_MESSAGE + " "
